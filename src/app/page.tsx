@@ -1,50 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { Advocate } from '@/lib/types';
+import { useAdvocatesQuery } from '@/hooks/useAdvocatesQuery';
 
 export default function Home() {
-  const [advocates, setAdvocates] = useState<Advocate[]>([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
   const [query, setQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    let isMounted = true;
-    const load = async () => {
-      try {
-        const response = await fetch('/api/advocates');
-        if (!response.ok) {
-          throw new Error(`Failed to load: ${response.status}`);
-        }
-        const jsonResponse = await response.json();
-        if (!isMounted) return;
-        setAdvocates(jsonResponse.data as Advocate[]);
-        setFilteredAdvocates(jsonResponse.data as Advocate[]);
-        setError(null);
-      } catch (e) {
-        if (!isMounted) return;
-        setError(e instanceof Error ? e.message : 'Unknown error');
-      } finally {
-        if (isMounted) setIsLoading(false);
-      }
-    };
-    load();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const { data, isLoading, error } = useAdvocatesQuery();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value;
     setQuery(searchTerm);
     const normalized = searchTerm.trim().toLowerCase();
+    const source: Advocate[] = data?.data ?? [];
     if (!normalized) {
-      setFilteredAdvocates(advocates);
       return;
     }
-    const next = advocates.filter((advocate) => {
+    const next = source.filter((advocate) => {
       const first = advocate.firstName.toLowerCase();
       const last = advocate.lastName.toLowerCase();
       const city = advocate.city.toLowerCase();
@@ -62,13 +35,35 @@ export default function Home() {
         phone.includes(normalized)
       );
     });
-    setFilteredAdvocates(next);
+    // no-op: filtering will be derived below; this handler only updates query
   };
 
   const onClick = () => {
     setQuery('');
-    setFilteredAdvocates(advocates);
   };
+
+  const advocates: Advocate[] = data?.data ?? [];
+  const normalized = query.trim().toLowerCase();
+  const filteredAdvocates: Advocate[] = !normalized
+    ? advocates
+    : advocates.filter((advocate) => {
+        const first = advocate.firstName.toLowerCase();
+        const last = advocate.lastName.toLowerCase();
+        const city = advocate.city.toLowerCase();
+        const degree = advocate.degree.toLowerCase();
+        const specialtiesJoined = advocate.specialties.join(' ').toLowerCase();
+        const years = String(advocate.yearsOfExperience);
+        const phone = String(advocate.phoneNumber);
+        return (
+          first.includes(normalized) ||
+          last.includes(normalized) ||
+          city.includes(normalized) ||
+          degree.includes(normalized) ||
+          specialtiesJoined.includes(normalized) ||
+          years.includes(normalized) ||
+          phone.includes(normalized)
+        );
+      });
 
   return (
     <main className='m-6'>
@@ -98,7 +93,9 @@ export default function Home() {
       </div>
 
       {isLoading && <p className='mt-6 text-gray-600'>Loading advocates…</p>}
-      {error && !isLoading && <p className='mt-6 text-red-600'>{error}</p>}
+      {error && !isLoading && (
+        <p className='mt-6 text-red-600'>{error.message}</p>
+      )}
       {!isLoading && !error && filteredAdvocates.length === 0 && (
         <p className='mt-6 text-gray-600'>No results found.</p>
       )}
