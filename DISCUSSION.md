@@ -16,3 +16,6 @@
 - My wife is a designer and always makes fun of me for my terrible taste. I'm at the 2hr mark now but I think I'll add a few more touches to styling
 
 - Looking back, I think I'd definitely make the input search be a multiselect component
+- Also dark mode would be nice
+- I added some sensible defaults for the eslint config, but I typically also like to have a prettier config as well
+- I didn't have strict typing on the API route, but I would typically have it as well (with proper validation via zod as mentioned above)
