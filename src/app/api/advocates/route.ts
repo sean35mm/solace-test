@@ -20,8 +20,18 @@ const ALLOWED_SORT_FIELDS: SortField[] = [
 ];
 
 export async function GET(request: Request) {
-  // Uncomment this block when switching to database
-  // const allData = await db.select().from(advocatesTable);
+  let allData: any[] | null = null;
+  try {
+    // Attempt DB read if DATABASE_URL is configured
+    // Note: drizzle returns snake_cased columns as defined in schema
+    // but field names match our schema property names
+    const result = await (db as any)?.select?.().from?.(advocatesTable);
+    if (Array.isArray(result)) {
+      allData = result as any[];
+    }
+  } catch {
+    allData = null;
+  }
 
   const url = new URL(request.url);
   const params = url.searchParams;
@@ -52,7 +62,7 @@ export async function GET(request: Request) {
     });
   }
 
-  const source = advocateData; // replace with allData when DB enabled
+  const source = allData ?? advocateData;
 
   const filtered = !q
     ? source
