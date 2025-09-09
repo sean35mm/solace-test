@@ -1,4 +1,4 @@
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import type { Advocate } from '@/lib/types';
 
 export type AdvocatesResponse = {
@@ -32,7 +32,7 @@ export function useAdvocatesQuery(params?: {
       if (!response.ok) throw new Error(`Failed to load: ${response.status}`);
       return response.json();
     },
-    placeholderData: keepPreviousData,
+    placeholderData: undefined,
     staleTime: 30_000,
   });
 }

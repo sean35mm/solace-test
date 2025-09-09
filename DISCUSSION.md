@@ -3,10 +3,11 @@
 ## What I would do next?
 
 - Add validation with Zod on the API route
-- Use Tanstack Table for the data table. I've integrated react-query and react-table (tanstack) at almost every company I've worked for. It's a powerful combination and I've used it to build a lot of complex tables with sorting, filtering, pagination, and more.
+- Use Tanstack Table for the data table. I've git st react-query and react-table (tanstack) at almost every company I've worked for. It's a powerful combination and I've used it to build a lot of complex tables with sorting, filtering, pagination, and more.
 - I think we should consider virtualization for the table. If we have a lot of data, we can use virtualization to only render the visible rows and offload the rest to the browser.
 - probably add some logging via 3rd party
 - tests if neded
+- I'm not sure about how you feel about shadcn, but I think it has great primitives based on Tailwind and Radix UI. I'd probalby use as a base for most components or work with a designer to create a design system with or without them
 
 ## Other considerations
 
@@ -14,3 +15,8 @@
 - I'm not really opinionated on the organization of the codebase, I just chose something that would be quick to maintain and understand for the purpose of the assignment
 - This was my first time using drizzle. Pretty great!
 - My wife is a designer and always makes fun of me for my terrible taste. I'm at the 2hr mark now but I think I'll add a few more touches to styling
+
+- Looking back, I think I'd definitely make the input search be a multiselect component
+- Also dark mode would be nice
+- I added some sensible defaults for the eslint config, but I typically also like to have a prettier config as well
+- I didn't have strict typing on the API route, but I would typically have it as well (with proper validation via zod as mentioned above)

@@ -38,49 +38,64 @@ export default function Home() {
   const endIndex = (page - 1) * pageSize + advocates.length;
 
   return (
-    <main className='m-6'>
-      <h1 className='text-2xl font-semibold'>Solace Advocates</h1>
-      <SearchBar query={query} onChange={onChange} onReset={onReset} />
+    <main className='px-6 py-8'>
+      <div className='max-w-6xl mx-auto'>
+        <header>
+          <h1 className='text-3xl font-semibold tracking-tight text-slate-900'>
+            Solace Advocates
+          </h1>
+          <p className='mt-1 text-slate-600'>
+            Search, sort, and browse our network of advocates.
+          </p>
+        </header>
 
-      {isLoading && <TableSkeleton rows={10} />}
-      {error && !isLoading && (
-        <p className='mt-6 text-red-600'>{error.message}</p>
-      )}
-      {!isLoading && !error && advocates.length === 0 && (
-        <p className='mt-6 text-gray-600'>No results found.</p>
-      )}
-
-      {!isLoading && !error && advocates.length > 0 && (
-        <div className='mt-6 overflow-x-auto'>
-          <div className='mb-2 flex items-center justify-between'>
-            <div className='text-sm text-gray-700'>
-              {startIndex}-{endIndex} of {total}
-            </div>
-            <div className='flex items-center gap-2'>
-              <button
-                type='button'
-                className='border rounded px-3 py-1 text-sm disabled:opacity-50'
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page <= 1 || isLoading}
-              >
-                Prev
-              </button>
-              <span className='text-sm text-gray-700'>
-                Page {page} of {maxPage}
-              </span>
-              <button
-                type='button'
-                className='border rounded px-3 py-1 text-sm disabled:opacity-50'
-                onClick={() => setPage((p) => Math.min(maxPage, p + 1))}
-                disabled={page >= maxPage || isLoading}
-              >
-                Next
-              </button>
-            </div>
-          </div>
-          <AdvocatesTable advocates={advocates} />
+        <div className='mt-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm'>
+          <SearchBar query={query} onChange={onChange} onReset={onReset} />
         </div>
-      )}
+
+        {isLoading && <TableSkeleton rows={10} />}
+        {error && !isLoading && (
+          <p className='mt-6 text-red-600'>{error.message}</p>
+        )}
+        {!isLoading && !error && advocates.length === 0 && (
+          <p className='mt-6 text-slate-600'>No results found.</p>
+        )}
+
+        {!isLoading && !error && advocates.length > 0 && (
+          <section className='mt-6 overflow-x-auto'>
+            <div className='mb-3 flex items-center justify-between'>
+              <div className='text-sm text-slate-700'>
+                {startIndex}-{endIndex} of {total}
+              </div>
+              <div className='flex items-center gap-2'>
+                <button
+                  type='button'
+                  className='rounded-md px-3 py-2 text-sm bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 disabled:opacity-50 shadow-sm'
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page <= 1 || isLoading}
+                >
+                  ← Prev
+                </button>
+                <span className='text-sm text-slate-700'>
+                  Page {page} of {maxPage}
+                </span>
+                <button
+                  type='button'
+                  className='rounded-md px-3 py-2 text-sm bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-50 shadow-sm'
+                  onClick={() => setPage((p) => Math.min(maxPage, p + 1))}
+                  disabled={page >= maxPage || isLoading}
+                >
+                  Next →
+                </button>
+              </div>
+            </div>
+            <AdvocatesTable
+              key={`${page}-${debouncedQuery}`}
+              advocates={advocates}
+            />
+          </section>
+        )}
+      </div>
     </main>
   );
 }
