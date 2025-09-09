@@ -14,3 +14,5 @@
 - I'm not really opinionated on the organization of the codebase, I just chose something that would be quick to maintain and understand for the purpose of the assignment
 - This was my first time using drizzle. Pretty great!
 - My wife is a designer and always makes fun of me for my terrible taste. I'm at the 2hr mark now but I think I'll add a few more touches to styling
+
+- Looking back, I think I'd definitely make the input search be a multiselect component

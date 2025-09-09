@@ -78,7 +78,10 @@ export default function Home() {
               </button>
             </div>
           </div>
-          <AdvocatesTable advocates={advocates} />
+          <AdvocatesTable
+            key={`${page}-${debouncedQuery}`}
+            advocates={advocates}
+          />
         </div>
       )}
     </main>
